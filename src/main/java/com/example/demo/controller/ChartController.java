@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.ActionButtonTableCell;
 import com.example.demo.model.Checklines;
 import com.example.demo.model.Checks;
 import com.example.demo.model.Good;
