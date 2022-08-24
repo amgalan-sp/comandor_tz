@@ -1,5 +1,8 @@
 package com.example.demo;
 
+import com.example.demo.model.Checklines;
+import com.example.demo.model.Checks;
+import com.example.demo.model.Good;
 import com.example.demo.repository.ChecksRepository;
 import com.example.demo.repository.GoodRepository;
 import javafx.beans.value.ChangeListener;
@@ -12,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import org.springframework.stereotype.Component;
+
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,8 +24,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+
 @Component
-public class ChartController implements Initializable {
+public class ChartController implements Initializable  {
     private final GoodRepository goodRepository;
     private final ChecksRepository checksRepository;
 
@@ -42,9 +47,12 @@ public class ChartController implements Initializable {
     @FXML
     private TableColumn<Checklines, String> name;
     @FXML
-    private TableColumn<Checklines, Integer> countOfCheck;
+    private TableColumn<Checklines, Integer> countOfCheckLine;
     @FXML
     private TableColumn<Checklines, Double> sum;
+    @FXML
+    private TableColumn<Checklines,Button> delete;
+
 
     public ChartController(GoodRepository goodRepository, ChecksRepository checksRepository) {
         this.goodRepository = goodRepository;
@@ -85,8 +93,12 @@ public class ChartController implements Initializable {
                         }
                     }
                     name.setCellValueFactory(new PropertyValueFactory<Checklines, String>("good"));
-                    countOfCheck.setCellValueFactory(new PropertyValueFactory<Checklines, Integer>("count"));
+                    countOfCheckLine.setCellValueFactory(new PropertyValueFactory<Checklines, Integer>("count"));
                     sum.setCellValueFactory(new PropertyValueFactory<Checklines, Double>("sum"));
+                    delete.setCellFactory(ActionButtonTableCell.<Checklines>forTableColumn("Удалить", (Checklines p) -> {
+                        shoppingCartTable.getItems().remove(p);
+                        return p;
+                    }));
                     shoppingCartTable.setItems(shoppingListCopy);
                     shoppingCartTable.refresh();
                 }
