@@ -12,13 +12,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import org.springframework.stereotype.Component;
-
-
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,7 +26,7 @@ public class ChartController implements Initializable {
     private final ChecksRepository checksRepository;
 
     ObservableList<Checklines> shoppingListCopy = FXCollections.observableArrayList();
-    CopyOnWriteArrayList<Checklines> shoppingList = new CopyOnWriteArrayList<>();
+//    CopyOnWriteArrayList<Checklines> shoppingList = new CopyOnWriteArrayList<>();
 
 
     @FXML
@@ -65,30 +64,31 @@ public class ChartController implements Initializable {
 
             @Override
             public void changed(ObservableValue<? extends Good> observableValue, Good s, Good t1) {
-                Checks newCheck = createCheck();
+                Checks newCheck = new Checks(LocalDate.now(), LocalTime.now(),  0);
                 int lineNumber =1;
                 int count =1;
 
                 currentFood = products.getSelectionModel().getSelectedItem();
                 if (currentFood!=null){
-//                    try {
-                    if(shoppingList.size()!=0) {
-                        shoppingList.forEach(checklines -> {
-                            if (checklines.getGood().equals(currentFood)) {
-                                checklines.setCount(checklines.getCount() + 1);
-                            } else {
-                                shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
-                            }
-                        });
+                    if(shoppingListCopy.size()==0) {
+                        shoppingListCopy.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
                     } else {
-                        shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
+                        shoppingListCopy.stream().filter(checklines ->
+                                        checklines.getGood().equals(currentFood)).forEach(
+                           e->{
+                                e.setCount(e.getCount()+1);
+                                e.setSum(e.getCount()*e.getGood().getPrice());
+                        });
+                        if (shoppingListCopy.stream().noneMatch(checklines ->
+                                checklines.getGood().equals(currentFood))) {
+                            shoppingListCopy.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
+                        }
                     }
                     name.setCellValueFactory(new PropertyValueFactory<Checklines, String>("good"));
                     countOfCheck.setCellValueFactory(new PropertyValueFactory<Checklines, Integer>("count"));
                     sum.setCellValueFactory(new PropertyValueFactory<Checklines, Double>("sum"));
-                    System.out.println(shoppingList);
-                    shoppingListCopy.addAll(shoppingList);
                     shoppingCartTable.setItems(shoppingListCopy);
+                    shoppingCartTable.refresh();
                 }
             }
         } ) ;
@@ -105,7 +105,7 @@ public class ChartController implements Initializable {
     private List<Good> findAll(){
         return goodRepository.findAll();
     }
-    private Checks createCheck(){
-        return checksRepository.saveAndFlush(new Checks());
+    private Checks createCheck(Checks check){
+        return checksRepository.saveAndFlush(check);
     }
 }

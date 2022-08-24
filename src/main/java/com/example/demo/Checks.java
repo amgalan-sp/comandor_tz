@@ -17,9 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 public class Checks {
 
-    public Checks() {
+    public Checks(LocalDate date, LocalTime  time, double sum) {
         this.date = LocalDate.now();
         this.time = LocalTime.now();
+        this.sum = sum;
+
     }
     @Id
     @Column(name="id", nullable = false, unique = true)
@@ -31,6 +33,10 @@ public class Checks {
     private LocalDate date;
     @Column(name="total_sum")
     private double sum;
+
+    public Checks() {
+
+    }
 
     @Override
     public String toString() {
