@@ -31,19 +31,16 @@ public class ChartController implements Initializable  {
     private final ChecksRepository checksRepository;
 
     ObservableList<Checklines> shoppingListCopy = FXCollections.observableArrayList();
-//    CopyOnWriteArrayList<Checklines> shoppingList = new CopyOnWriteArrayList<>();
-
-
     @FXML
     private TextField searchBar;
-
     @FXML
     private Good currentFood;
-
     @FXML
     private ListView<Good> products;
     @FXML
     private TableView<Checklines> shoppingCartTable;
+    @FXML
+    private TableView<Checks> totalCartTable;
     @FXML
     private TableColumn<Checklines, String> name;
     @FXML
@@ -52,7 +49,10 @@ public class ChartController implements Initializable  {
     private TableColumn<Checklines, Double> sum;
     @FXML
     private TableColumn<Checklines,Button> delete;
-
+    @FXML
+    private TableColumn<Checks, Double> totalSum;
+    @FXML
+    private TableColumn<Checks,Button> toPay;
 
     public ChartController(GoodRepository goodRepository, ChecksRepository checksRepository) {
         this.goodRepository = goodRepository;
@@ -77,31 +77,32 @@ public class ChartController implements Initializable  {
                 int count =1;
 
                 currentFood = products.getSelectionModel().getSelectedItem();
-                if (currentFood!=null){
-                    if(shoppingListCopy.size()==0) {
+                if (currentFood!=null) {
+                    if (shoppingListCopy.size() == 0) {
                         shoppingListCopy.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
                     } else {
                         shoppingListCopy.stream().filter(checklines ->
-                                        checklines.getGood().equals(currentFood)).forEach(
-                           e->{
-                                e.setCount(e.getCount()+1);
-                                e.setSum(e.getCount()*e.getGood().getPrice());
-                        });
+                                checklines.getGood().equals(currentFood)).forEach(
+                                e -> {
+                                    e.setCount(e.getCount() + 1);
+                                    e.setSum(e.getCount() * e.getGood().getPrice());
+                                });
                         if (shoppingListCopy.stream().noneMatch(checklines ->
                                 checklines.getGood().equals(currentFood))) {
                             shoppingListCopy.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
                         }
                     }
-                    name.setCellValueFactory(new PropertyValueFactory<Checklines, String>("good"));
-                    countOfCheckLine.setCellValueFactory(new PropertyValueFactory<Checklines, Integer>("count"));
-                    sum.setCellValueFactory(new PropertyValueFactory<Checklines, Double>("sum"));
-                    delete.setCellFactory(ActionButtonTableCell.<Checklines>forTableColumn("Удалить", (Checklines p) -> {
-                        shoppingCartTable.getItems().remove(p);
-                        return p;
-                    }));
-                    shoppingCartTable.setItems(shoppingListCopy);
-                    shoppingCartTable.refresh();
                 }
+                name.setCellValueFactory(new PropertyValueFactory<Checklines, String>("good"));
+                countOfCheckLine.setCellValueFactory(new PropertyValueFactory<Checklines, Integer>("count"));
+                sum.setCellValueFactory(new PropertyValueFactory<Checklines, Double>("sum"));
+                delete.setCellFactory(ActionButtonTableCell.<Checklines>forTableColumn("Удалить", (Checklines p) -> {
+                    shoppingCartTable.getItems().remove(p);
+                    return p;
+                }));
+                shoppingCartTable.setItems(shoppingListCopy);
+                shoppingCartTable.refresh();
+
             }
         } ) ;
     }
