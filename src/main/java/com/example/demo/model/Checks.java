@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalDouble;
 
 @Entity(name="checks")
 @Getter
@@ -46,4 +48,8 @@ public class Checks {
                 ", sum=" + sum +
                 '}';
     }
+
+//    public void setDoubleSum(Optional<Double> aDouble) {
+//        this.sum  = OptionalDouble.empty().orElse(0);
+//    }
 }

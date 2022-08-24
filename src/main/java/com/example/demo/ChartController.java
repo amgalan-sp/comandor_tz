@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,8 @@ public class ChartController implements Initializable  {
     private final GoodRepository goodRepository;
     private final ChecksRepository checksRepository;
 
-    ObservableList<Checklines> shoppingListCopy = FXCollections.observableArrayList();
+    ObservableList<Checklines> shoppingList = FXCollections.observableArrayList();
+    ObservableList<Checks> checkList = FXCollections.observableArrayList();
     @FXML
     private TextField searchBar;
     @FXML
@@ -64,32 +66,35 @@ public class ChartController implements Initializable  {
         products.getItems().clear();
         products.getItems().addAll(searchList(searchBar.getText(),findAll()));
     }
+    Checks newCheck = new Checks(LocalDate.now(), LocalTime.now(),  0);
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         products.getItems().addAll(findAll());
+        checkList.add(newCheck);
+        totalCartTable.setItems(checkList);
         products.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Good>() {
 
             @Override
             public void changed(ObservableValue<? extends Good> observableValue, Good s, Good t1) {
-                Checks newCheck = new Checks(LocalDate.now(), LocalTime.now(),  0);
                 int lineNumber =1;
                 int count =1;
 
                 currentFood = products.getSelectionModel().getSelectedItem();
                 if (currentFood!=null) {
-                    if (shoppingListCopy.size() == 0) {
-                        shoppingListCopy.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
+                    if (shoppingList.size() == 0) {
+                        shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
                     } else {
-                        shoppingListCopy.stream().filter(checklines ->
+                        shoppingList.stream().filter(checklines ->
                                 checklines.getGood().equals(currentFood)).forEach(
                                 e -> {
                                     e.setCount(e.getCount() + 1);
                                     e.setSum(e.getCount() * e.getGood().getPrice());
                                 });
-                        if (shoppingListCopy.stream().noneMatch(checklines ->
+                        if (shoppingList.stream().noneMatch(checklines ->
                                 checklines.getGood().equals(currentFood))) {
-                            shoppingListCopy.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
+                            shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
                         }
                     }
                 }
@@ -98,9 +103,15 @@ public class ChartController implements Initializable  {
                 sum.setCellValueFactory(new PropertyValueFactory<Checklines, Double>("sum"));
                 delete.setCellFactory(ActionButtonTableCell.<Checklines>forTableColumn("Удалить", (Checklines p) -> {
                     shoppingCartTable.getItems().remove(p);
+                    newCheck.setSum(shoppingCartTable.getItems().stream().map(Checklines::getSum).reduce(Double::sum).orElse(0.0));
+                    totalCartTable.refresh();
+                    shoppingCartTable.refresh();
                     return p;
                 }));
-                shoppingCartTable.setItems(shoppingListCopy);
+                shoppingCartTable.setItems(shoppingList);
+                newCheck.setSum(shoppingCartTable.getItems().stream().map(Checklines::getSum).reduce(Double::sum).orElse(0.0));
+                totalSum.setCellValueFactory(new PropertyValueFactory<Checks,Double>("sum"));
+                totalCartTable.refresh();
                 shoppingCartTable.refresh();
 
             }
