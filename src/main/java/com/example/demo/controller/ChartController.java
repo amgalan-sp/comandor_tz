@@ -11,18 +11,24 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -54,8 +60,11 @@ public class ChartController implements Initializable  {
     private TableColumn<Checklines,Button> delete;
     @FXML
     private TableColumn<Checks, Double> totalSum;
+
     @FXML
-    private TableColumn<Checks,Button> toPay;
+    private Button button;
+    @Value("classpath:/bankSecurePay.fxml")
+    private Resource chartResource;
 
     public ChartController(GoodRepository goodRepository, ChecksRepository checksRepository) {
         this.goodRepository = goodRepository;
@@ -109,12 +118,28 @@ public class ChartController implements Initializable  {
                     shoppingCartTable.refresh();
                     return p;
                 }));
+
                 shoppingCartTable.setItems(shoppingList);
                 newCheck.setSum(shoppingCartTable.getItems().stream().map(Checklines::getSum).reduce(Double::sum).orElse(0.0));
                 totalSum.setCellValueFactory(new PropertyValueFactory<Checks,Double>("sum"));
                 totalCartTable.refresh();
                 shoppingCartTable.refresh();
+                button.setOnAction(event -> {
+                    button.getScene().getWindow().hide();
 
+                    try {
+                        FXMLLoader loader = new FXMLLoader(chartResource.getURL());
+                        Parent parent =loader.load();
+                        Stage stage = new Stage();
+                        stage.setScene(new Scene(parent));
+                        stage.setTitle("Окно оплаты");
+                        stage.showAndWait();
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                });
             }
         } ) ;
     }
@@ -133,4 +158,5 @@ public class ChartController implements Initializable  {
     private Checks createCheck(Checks check){
         return checksRepository.saveAndFlush(check);
     }
+
 }

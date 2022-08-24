@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -12,8 +13,8 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     <TextField fx:id="searchBar" onKeyTyped="#search" prefHeight="6.0" prefWidth="760.0" />
-    <ListView fx:id="products" fixedCellSize="50.0" prefHeight="246.0" prefWidth="760.0" />
-    <TableView fx:id="shoppingCartTable" fixedCellSize="50.0" prefHeight="289.0" prefWidth="760.0">
+    <ListView fx:id="products" fixedCellSize="20.0" prefHeight="305.0" prefWidth="760.0" />
+    <TableView fx:id="shoppingCartTable" fixedCellSize="20.0" prefHeight="159.0" prefWidth="760.0">
         <columns>
             <TableColumn fx:id="name" prefWidth="428.0" text="Наименование" />
             <TableColumn fx:id="countOfCheckLine" minWidth="0.0" prefWidth="127.0" text="Количество" />
@@ -21,10 +22,10 @@
             <TableColumn fx:id="delete" prefWidth="126.0" />
         </columns>
     </TableView>
-   <TableView fx:id="totalCartTable" prefHeight="113.0" prefWidth="760.0">
+   <TableView fx:id="totalCartTable" prefHeight="86.0" prefWidth="760.0">
      <columns>
-       <TableColumn fx:id="totalSum" prefWidth="503.0" text="Итого  сумма" />
-       <TableColumn fx:id="toPay" minWidth="0.0" prefWidth="139.0" />
+       <TableColumn fx:id="totalSum" prefWidth="403.0" text="Итого  сумма" />
      </columns>
    </TableView>
+   <Button fx:id="button" mnemonicParsing="false" text="Оплатить" />
 </VBox>
