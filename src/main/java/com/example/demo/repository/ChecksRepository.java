@@ -1,6 +1,6 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.Checks;
+import com.example.demo.Checks;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

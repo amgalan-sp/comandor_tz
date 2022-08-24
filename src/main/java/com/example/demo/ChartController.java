@@ -1,7 +1,5 @@
 package com.example.demo;
 
-import com.example.demo.model.Checks;
-import com.example.demo.model.Good;
 import com.example.demo.repository.ChecksRepository;
 import com.example.demo.repository.GoodRepository;
 import javafx.beans.value.ChangeListener;
@@ -17,14 +15,10 @@ import org.springframework.stereotype.Component;
 
 
 import java.net.URL;
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 @Component
@@ -32,21 +26,8 @@ public class ChartController implements Initializable {
     private final GoodRepository goodRepository;
     private final ChecksRepository checksRepository;
 
-//    ArrayList<Good> productList = new ArrayList<>(
-//            Arrays.asList(
-//                    new Good(1,"Яблоко", 12.5),
-//                    new Good(2, "Груша", 13.3),
-//                    new Good(3,"Банан", 10.5),
-//                    new Good(4,"Виноград", 10.0),
-//                    new Good(5,"Персики", 11.5)
-//            ));
-//    ArrayList<Checklines> checkLinesList = new ArrayList<>(
-//            Arrays.asList(
-//                    new Checklines()
-//
-//            ));
-
-    ObservableList<Good> shoppingList = FXCollections.observableArrayList();
+    ObservableList<Checklines> shoppingListCopy = FXCollections.observableArrayList();
+    CopyOnWriteArrayList<Checklines> shoppingList = new CopyOnWriteArrayList<>();
 
 
     @FXML
@@ -58,13 +39,13 @@ public class ChartController implements Initializable {
     @FXML
     private ListView<Good> products;
     @FXML
-    private TableView<Good> shoppingCartTable;
+    private TableView<Checklines> shoppingCartTable;
     @FXML
-    private TableColumn<Good, String> name;
+    private TableColumn<Checklines, String> name;
     @FXML
-    private TableColumn<Good, Integer> count;
+    private TableColumn<Checklines, Integer> countOfCheck;
     @FXML
-    private TableColumn<Good, Double> price;
+    private TableColumn<Checklines, Double> sum;
 
     public ChartController(GoodRepository goodRepository, ChecksRepository checksRepository) {
         this.goodRepository = goodRepository;
@@ -79,25 +60,35 @@ public class ChartController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        productList = findAll().;
         products.getItems().addAll(findAll());
-
         products.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Good>() {
 
             @Override
             public void changed(ObservableValue<? extends Good> observableValue, Good s, Good t1) {
+                Checks newCheck = createCheck();
+                int lineNumber =1;
+                int count =1;
 
                 currentFood = products.getSelectionModel().getSelectedItem();
                 if (currentFood!=null){
-                    if(shoppingList.contains(currentFood)) {
-                        System.out.println("!!!");
+//                    try {
+                    if(shoppingList.size()!=0) {
+                        shoppingList.forEach(checklines -> {
+                            if (checklines.getGood().equals(currentFood)) {
+                                checklines.setCount(checklines.getCount() + 1);
+                            } else {
+                                shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
+                            }
+                        });
+                    } else {
+                        shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
                     }
-                    shoppingList.add(currentFood);
-                    name.setCellValueFactory(new PropertyValueFactory<Good, String>("name"));
-                    count.setCellValueFactory(new PropertyValueFactory<Good, Integer>("id"));
-                    price.setCellValueFactory(new PropertyValueFactory<Good, Double>("price"));
-                    shoppingCartTable.setItems(shoppingList);
-
+                    name.setCellValueFactory(new PropertyValueFactory<Checklines, String>("good"));
+                    countOfCheck.setCellValueFactory(new PropertyValueFactory<Checklines, Integer>("count"));
+                    sum.setCellValueFactory(new PropertyValueFactory<Checklines, Double>("sum"));
+                    System.out.println(shoppingList);
+                    shoppingListCopy.addAll(shoppingList);
+                    shoppingCartTable.setItems(shoppingListCopy);
                 }
             }
         } ) ;

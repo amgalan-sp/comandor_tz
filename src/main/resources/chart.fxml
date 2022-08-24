@@ -17,8 +17,8 @@
     <TableView fx:id="shoppingCartTable" fixedCellSize="50.0" prefHeight="200.0" prefWidth="713.0">
         <columns>
             <TableColumn fx:id="name" prefWidth="493.0" text="Наименование" />
-            <TableColumn fx:id="count" minWidth="0.0" prefWidth="120.0" text="Количество" />
-            <TableColumn fx:id="price" prefWidth="146.0" text="Общая стоимость" />
+            <TableColumn fx:id="countOfCheck" minWidth="0.0" prefWidth="120.0" text="Количество" />
+            <TableColumn fx:id="sum" prefWidth="146.0" text="Итого" />
         </columns>
     </TableView>
 </VBox>

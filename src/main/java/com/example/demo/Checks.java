@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -28,8 +29,15 @@ public class Checks {
     private LocalTime time;
     @Column(name = "date")
     private LocalDate date;
-    @OneToMany
-    List<Checklines> checklinesList;
+    @Column(name="total_sum")
+    private double sum;
 
-
+    @Override
+    public String toString() {
+        return "Checks: " +
+                "time=" + time +
+                ", date=" + date +
+                ", sum=" + sum +
+                '}';
+    }
 }

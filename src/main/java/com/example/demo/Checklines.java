@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo;
 
 import lombok.*;
 
@@ -27,5 +27,5 @@ public class Checklines {
     @Column(name="count")
     private int count;
     @Column(name="sum")
-    private int sum;
+    private double sum;
 }
