@@ -21,6 +21,6 @@
          </Label>
       </children>
    </AnchorPane>
-    <TextField fx:id="searchBarToPay" onKeyTyped="#comparise" prefHeight="6.0" prefWidth="760.0" />
-   <Button mnemonicParsing="false" text="Оплатить" />
+    <TextField fx:id="searchBarToPay" onKeyTyped="#compare" prefHeight="6.0" prefWidth="760.0" />
+   <Button fx:id="buttonToCompare" mnemonicParsing="false" text="Оплатить" />
 </VBox>

@@ -23,6 +23,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
@@ -45,8 +46,6 @@ public class ChartController implements Initializable  {
     ObservableList<Checks> checkList = FXCollections.observableArrayList();
     @FXML
     private TextField searchBar;
-    @FXML
-    private TextField searchBarToPay;
     @FXML
     private Good currentFood;
     @FXML
@@ -83,11 +82,8 @@ public class ChartController implements Initializable  {
         products.getItems().addAll(searchList(searchBar.getText(),findAll()));
     }
 // Создание нулевого чека
-    Checks newCheck = new Checks(LocalDate.now(), LocalTime.now(),  0);
+    public Checks newCheck = new Checks(LocalDate.now(), LocalTime.now(),  0);
 
-    @FXML
-    void comparise(KeyEvent event) {
-    }
 // добавление модального окна
     public void showDialog(ActionEvent actionEvent) {
         try {
