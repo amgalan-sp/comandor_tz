@@ -21,6 +21,11 @@ public class Good {
     @Column(name = "price")
     private Double price;
 
+    public Good(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return name;

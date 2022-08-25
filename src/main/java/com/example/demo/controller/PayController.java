@@ -50,7 +50,7 @@ public class PayController implements Initializable {
     }
     public void actionPay(ActionEvent actionEvent) {
         if(customerSum==totalSum) {
-            checkToSave = new Checks(LocalDate.now(), LocalTime.now(), checkToPay.getSum());
+            checkToSave = new Checks(checkToPay.getSum());
             DialogManager.showInfoDialog("Успех", "Оплата проведена");
             returnFromPayController=true;
         } else {

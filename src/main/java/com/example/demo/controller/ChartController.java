@@ -90,7 +90,7 @@ public class ChartController implements Initializable  {
         products.getItems().addAll(searchList(searchBar.getText(),findAll()));
     }
 // Создание нулевого чека
-    public Checks newCheck = new Checks(LocalDate.now(), LocalTime.now(),  0);
+    public Checks newCheck = new Checks(0);
 
 // добавление модального окна
     private void showDialog(Window parentWindow) {
@@ -127,7 +127,6 @@ public class ChartController implements Initializable  {
                 break;
         }
     }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 //  Ввод списка товаров в из БД
@@ -164,7 +163,7 @@ public class ChartController implements Initializable  {
                                     e.setCount(e.getCount() + 1);
                                     e.setSum(e.getCount() * e.getGood().getPrice());
                                 });
-// При условии отсутствия данного  товара в корзине добавляется в корзину
+// При условии отсутствия данного товара в корзине добавляется в корзину
                         if (shoppingList.stream().noneMatch(checklines ->
                                 checklines.getGood().equals(currentFood))) {
                             shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));

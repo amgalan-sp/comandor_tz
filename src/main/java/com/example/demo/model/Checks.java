@@ -19,11 +19,10 @@ import java.util.OptionalDouble;
 @AllArgsConstructor
 public class Checks {
 
-    public Checks(LocalDate date, LocalTime  time, double sum) {
+    public Checks(double sum) {
         this.date = LocalDate.now();
         this.time = LocalTime.now();
         this.sum = sum;
-
     }
     @Id
     @Column(name="id", nullable = false, unique = true)

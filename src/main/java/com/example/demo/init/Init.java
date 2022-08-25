@@ -20,12 +20,12 @@ public class Init {
     @PostConstruct
     private void postConstruct(){
         List<Good> goodList = new ArrayList<>();
-        goodList.add(new Good(1,"Яблоки краснодарские",98.7));
-        goodList.add(new Good(2,"Яблоки Ред  Чиф",99.5));
-        goodList.add(new Good(3,"Мандарины",124.5));
-        goodList.add(new Good(4,"Груши Форелл",124.5));
-        goodList.add(new Good(5,"Груши Пакхам",99.5));
-        goodList.add(new Good(6,"Coca-Cola  0,5 л",95.0));
+        goodList.add(new Good("Яблоки краснодарские",98.7));
+        goodList.add(new Good("Яблоки Ред  Чиф",99.5));
+        goodList.add(new Good("Мандарины",124.5));
+        goodList.add(new Good("Груши Форелл",124.5));
+        goodList.add(new Good("Груши Пакхам",99.5));
+        goodList.add(new Good("Coca-Cola  0,5 л",95.0));
         goodList.forEach(good -> goodRepository.saveAndFlush(good));
 
 
