@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.DialogManager;
 import com.example.demo.model.Checks;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,15 +25,11 @@ public class PayController implements Initializable {
     private TextField searchBarToPay;
 
     private double totalSum;
+
     @FXML
     private Button buttonToCompare;
-//    private ChartController chartController;
     double customerSum;
     private Checks checkToPay;
-
-//    public PayController(ChartController chartController) {
-//        this.chartController = chartController;
-//    }
 
     public Checks getCheck(){
         return checkToPay;
@@ -42,19 +39,20 @@ public class PayController implements Initializable {
     void compare(KeyEvent event) {
         customerSum  = Double.parseDouble(searchBarToPay.getText());
     }
-
     void setValueToPay(Checks checkToPay) {
         this.checkToPay = checkToPay;
         this.totalSum = checkToPay.getSum();
     }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
     public void actionPay(ActionEvent actionEvent) {
         if(customerSum==totalSum) {
             Checks checkToSave = new Checks(LocalDate.now(), LocalTime.now(), checkToPay.getSum());
-            System.out.println(checkToSave);
+            DialogManager.showInfoDialog("Успех", "Оплата проведена");
+        } else {
+            DialogManager.showErrorDialog("Ошибка", "Оплата не проведена");
+
         }
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
