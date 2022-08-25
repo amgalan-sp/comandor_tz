@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.ActionButtonTableCell;
+import com.example.demo.init.Init;
 import com.example.demo.model.Checklines;
 import com.example.demo.model.Checks;
 import com.example.demo.model.Good;
@@ -24,7 +25,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 public class ChartController implements Initializable  {
     private final GoodRepository goodRepository;
     private final ChecksRepository checksRepository;
+    private final Init init;
 
     ObservableList<Checklines> shoppingList = FXCollections.observableArrayList();
     ObservableList<Checks> checkList = FXCollections.observableArrayList();
@@ -70,7 +71,6 @@ public class ChartController implements Initializable  {
     private Button buttonToPay;
     @Value("classpath:/bankSecurePay.fxml")
     private Resource payResource;
-// используем преимущества спринга
     @FXML
     private Parent fxmlPay;
     private FXMLLoader fxmlLoader;
@@ -78,9 +78,10 @@ public class ChartController implements Initializable  {
     private Stage payStage;
 
 
-    public ChartController(GoodRepository goodRepository, ChecksRepository checksRepository) {
+    public ChartController(GoodRepository goodRepository, ChecksRepository checksRepository, Init init) {
         this.goodRepository = goodRepository;
         this.checksRepository = checksRepository;
+        this.init = init;
     }
 // Соответсвующая поисковой строке продуктов функция
     @FXML
