@@ -25,6 +25,8 @@ public class PayController implements Initializable {
     private TextField searchBarToPay;
 
     private double totalSum;
+    Checks checkToSave;
+    boolean returnFromPayController;
 
     @FXML
     private Button buttonToCompare;
@@ -48,11 +50,12 @@ public class PayController implements Initializable {
     }
     public void actionPay(ActionEvent actionEvent) {
         if(customerSum==totalSum) {
-            Checks checkToSave = new Checks(LocalDate.now(), LocalTime.now(), checkToPay.getSum());
+            checkToSave = new Checks(LocalDate.now(), LocalTime.now(), checkToPay.getSum());
             DialogManager.showInfoDialog("Успех", "Оплата проведена");
+            returnFromPayController=true;
         } else {
             DialogManager.showErrorDialog("Ошибка", "Оплата не проведена");
-
+            returnFromPayController=false;
         }
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();

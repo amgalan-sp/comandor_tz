@@ -116,6 +116,11 @@ public class ChartController implements Initializable  {
         switch (clickedButton.getId()) {
             case "buttonToPay":
                 showDialog(parentWindow);
+                if(payController.returnFromPayController){
+                    createCheck(payController.getCheck());
+                    shoppingCartTable.getItems().clear();
+                    totalCartTable.getItems().clear();
+                }
                 break;
             case "another":
                 break;
