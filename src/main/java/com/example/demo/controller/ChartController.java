@@ -22,6 +22,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
@@ -46,7 +47,7 @@ public class ChartController implements Initializable  {
     ObservableList<Checks> checkList = FXCollections.observableArrayList();
     @FXML
     private TextField searchBar;
-    @FXML
+
     private Good currentFood;
     @FXML
     private ListView<Good> products;
@@ -68,8 +69,14 @@ public class ChartController implements Initializable  {
     @FXML
     private Button buttonToPay;
     @Value("classpath:/bankSecurePay.fxml")
-    private Resource chartResource;
+    private Resource payResource;
 // используем преимущества спринга
+    @FXML
+    private Parent fxmlPay;
+    private FXMLLoader fxmlLoader;
+    private PayController payController;
+    private Stage payStage;
+
 
     public ChartController(GoodRepository goodRepository, ChecksRepository checksRepository) {
         this.goodRepository = goodRepository;
@@ -85,21 +92,33 @@ public class ChartController implements Initializable  {
     public Checks newCheck = new Checks(LocalDate.now(), LocalTime.now(),  0);
 
 // добавление модального окна
-    public void showDialog(ActionEvent actionEvent) {
-        try {
-            FXMLLoader loader = new FXMLLoader(chartResource.getURL());
-            Parent parent =loader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(parent));
-            stage.setMinHeight(150);
-            stage.setMinWidth(300);
-            stage.setResizable(false);
-            stage.setTitle("Окно оплаты");
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(((Node)actionEvent.getSource()).getScene().getWindow());
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void showDialog(Window parentWindow) {
+        if(payStage==null) {
+            payStage = new Stage();
+            payStage.setTitle("Окно оплаты");
+            payStage.setMinHeight(150);
+            payStage.setMinWidth(300);
+            payStage.setResizable(false);
+            payStage.setScene(new Scene(fxmlPay));
+            payStage.initModality(Modality.WINDOW_MODAL);
+            payStage.initOwner(parentWindow);
+        }
+        payStage.showAndWait();
+    }
+    public void actionButtonPressed(ActionEvent actionEvent)   {
+        Object source =  actionEvent.getSource();
+        if(!(source instanceof Button))  {
+            return;
+        }
+        Button clickedButton = (Button) source;
+        Window parentWindow =  ((Node) actionEvent.getSource()).getScene().getWindow();
+        payController.setValueToPay(newCheck);
+        switch (clickedButton.getId()) {
+            case "buttonToPay":
+                showDialog(parentWindow);
+                break;
+            case "another":
+                break;
         }
     }
 
@@ -107,6 +126,13 @@ public class ChartController implements Initializable  {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 //  Ввод списка товаров в из БД
         products.getItems().addAll(findAll());
+        try{
+            fxmlLoader = new FXMLLoader(payResource.getURL());
+            fxmlPay = fxmlLoader.load();
+            payController = fxmlLoader.getController();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 //   Добавление нулевого чека для корректного добавления списка в корзине
         checkList.add(newCheck);
 //   Единоразовое добавление кандидата - Нового чека на покупки
@@ -177,8 +203,8 @@ public class ChartController implements Initializable  {
         return goodRepository.findAll();
     }
 //  функция записи чека в БД
-    private Checks createCheck(Checks check){
-        return checksRepository.saveAndFlush(check);
+    void createCheck(Checks check){
+         checksRepository.saveAndFlush(check);
     }
 
 }

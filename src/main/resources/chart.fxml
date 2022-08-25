@@ -27,5 +27,5 @@
        <TableColumn fx:id="totalSum" prefWidth="403.0" text="Итого  сумма" />
      </columns>
    </TableView>
-   <Button fx:id="buttonToPay" mnemonicParsing="false" onAction="#showDialog" text="Оплатить" />
+   <Button fx:id="buttonToPay" mnemonicParsing="false" onAction="#actionButtonPressed" text="Оплатить" />
 </VBox>
