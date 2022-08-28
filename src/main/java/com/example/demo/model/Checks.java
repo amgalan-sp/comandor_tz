@@ -19,7 +19,7 @@ import java.util.OptionalDouble;
 @AllArgsConstructor
 public class Checks {
 
-    public Checks(double sum) {
+    public Checks(BigDecimal sum) {
         this.date = LocalDate.now();
         this.time = LocalTime.now();
         this.sum = sum;
@@ -33,7 +33,7 @@ public class Checks {
     @Column(name = "date")
     private LocalDate date;
     @Column(name="total_sum")
-    private double sum;
+    private BigDecimal sum;
 
     public Checks() {
 

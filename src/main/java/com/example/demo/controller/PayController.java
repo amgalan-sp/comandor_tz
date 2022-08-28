@@ -13,9 +13,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 @Component
@@ -24,13 +25,13 @@ public class PayController implements Initializable {
     @FXML
     private TextField searchBarToPay;
 
-    private double totalSum;
+    private BigDecimal totalSum;
     Checks checkToSave;
     boolean returnFromPayController;
 
     @FXML
     private Button buttonToCompare;
-    double customerSum;
+    BigDecimal customerSum;
     private Checks checkToPay;
 
     public Checks getCheck(){
@@ -39,7 +40,7 @@ public class PayController implements Initializable {
 
     @FXML
     void compare(KeyEvent event) {
-        customerSum  = Double.parseDouble(searchBarToPay.getText());
+        customerSum  = new BigDecimal(searchBarToPay.getText()).setScale(2, RoundingMode.CEILING);
     }
     void setValueToPay(Checks checkToPay) {
         this.checkToPay = checkToPay;
@@ -49,7 +50,10 @@ public class PayController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
     public void actionPay(ActionEvent actionEvent) {
-        if(customerSum==totalSum) {
+
+
+        if(customerSum.compareTo(totalSum) ==0) {
+
             checkToSave = new Checks(checkToPay.getSum());
             DialogManager.showInfoDialog("Успех", "Оплата проведена");
             returnFromPayController=true;

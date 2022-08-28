@@ -3,6 +3,7 @@ package com.example.demo.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity(name = "goods")
 @Getter
@@ -19,9 +20,9 @@ public class Good {
     @Column(name = "name")
     private String name;
     @Column(name = "price")
-    private Double price;
+    private BigDecimal price;
 
-    public Good(String name, double price) {
+    public Good(String name, BigDecimal price) {
         this.name = name;
         this.price = price;
     }

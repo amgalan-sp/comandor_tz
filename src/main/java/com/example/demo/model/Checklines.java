@@ -3,6 +3,7 @@ package com.example.demo.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity(name = "checklines")
 @Getter
@@ -27,5 +28,5 @@ public class Checklines {
     @Column(name="count")
     private int count;
     @Column(name="sum")
-    private double sum;
+    private BigDecimal sum;
 }

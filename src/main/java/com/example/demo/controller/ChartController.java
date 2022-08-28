@@ -29,6 +29,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -90,7 +91,7 @@ public class ChartController implements Initializable  {
         products.getItems().addAll(searchList(searchBar.getText(),findAll()));
     }
 // Создание нулевого чека
-    public Checks newCheck = new Checks(0);
+    public Checks newCheck = new Checks(BigDecimal.valueOf(0));
 
 // добавление модального окна
     private void showDialog(Window parentWindow) {
@@ -154,19 +155,19 @@ public class ChartController implements Initializable  {
                 if (currentFood!=null) {
 // При нулевом списке
                     if (shoppingList.size() == 0) {
-                        shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
+                        shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, BigDecimal.valueOf(count).multiply(currentFood.getPrice())));
                     } else {
 // Поиск такой же позиции  в корзине и определение кол-ва и суммы
                         shoppingList.stream().filter(checklines ->
                                 checklines.getGood().equals(currentFood)).forEach(
                                 e -> {
                                     e.setCount(e.getCount() + 1);
-                                    e.setSum(e.getCount() * e.getGood().getPrice());
+                                    e.setSum(BigDecimal.valueOf(e.getCount()).multiply(e.getGood().getPrice()));
                                 });
 // При условии отсутствия данного товара в корзине добавляется в корзину
                         if (shoppingList.stream().noneMatch(checklines ->
                                 checklines.getGood().equals(currentFood))) {
-                            shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (count * currentFood.getPrice())));
+                            shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (currentFood.getPrice().multiply(BigDecimal.valueOf(count)))));
                         }
                     }
                 }
@@ -177,7 +178,7 @@ public class ChartController implements Initializable  {
 // Удаление позиций
                 delete.setCellFactory(ActionButtonTableCell.<Checklines>forTableColumn("Удалить", (Checklines p) -> {
                     shoppingCartTable.getItems().remove(p);
-                    newCheck.setSum(shoppingCartTable.getItems().stream().map(Checklines::getSum).reduce(Double::sum).orElse(0.0));
+                    newCheck.setSum(shoppingCartTable.getItems().stream().map(Checklines::getSum).reduce(BigDecimal::add).orElse(BigDecimal.valueOf(0.0)));
                     totalCartTable.refresh();
                     shoppingCartTable.refresh();
                     return p;
@@ -185,7 +186,7 @@ public class ChartController implements Initializable  {
 // Добавление списка товаров в отображаемый список
                 shoppingCartTable.setItems(shoppingList);
 // Расчет итоговой суммы
-                newCheck.setSum(shoppingCartTable.getItems().stream().map(Checklines::getSum).reduce(Double::sum).orElse(0.0));
+                newCheck.setSum(shoppingCartTable.getItems().stream().map(Checklines::getSum).reduce(BigDecimal::add).orElse(BigDecimal.valueOf(0.0)));
 //  Определение ячейки
 
                 totalSum.setCellValueFactory(new PropertyValueFactory<Checks,Double>("sum"));
