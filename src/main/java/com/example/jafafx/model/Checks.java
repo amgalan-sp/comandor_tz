@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.jafafx.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +36,6 @@ public class Checks {
     private BigDecimal sum;
 
     public Checks() {
-
     }
 
     @Override

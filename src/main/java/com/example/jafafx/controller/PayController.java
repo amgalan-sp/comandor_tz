@@ -1,8 +1,8 @@
-package com.example.demo.controller;
+package com.example.jafafx.controller;
 
 
-import com.example.demo.DialogManager;
-import com.example.demo.model.Checks;
+import com.example.jafafx.DialogManager;
+import com.example.jafafx.model.Checks;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

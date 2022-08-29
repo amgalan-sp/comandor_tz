@@ -1,7 +1,7 @@
-package com.example.demo.init;
+package com.example.jafafx.init;
 
-import com.example.demo.model.Good;
-import com.example.demo.repository.GoodRepository;
+import com.example.jafafx.model.Good;
+import com.example.jafafx.repository.GoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

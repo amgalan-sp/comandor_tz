@@ -1,17 +1,18 @@
-package com.example.demo.controller;
+package com.example.jafafx.controller;
 
-import com.example.demo.ActionButtonTableCell;
-import com.example.demo.init.Init;
-import com.example.demo.model.Checklines;
-import com.example.demo.model.Checks;
-import com.example.demo.model.Good;
-import com.example.demo.repository.ChecksRepository;
-import com.example.demo.repository.GoodRepository;
+import com.example.jafafx.ActionButtonTableCell;
+import com.example.jafafx.init.Init;
+import com.example.jafafx.model.Checklines;
+import com.example.jafafx.model.Checks;
+import com.example.jafafx.model.Good;
+import com.example.jafafx.repository.ChecksRepository;
+import com.example.jafafx.repository.GoodRepository;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -143,32 +145,26 @@ public class ChartController implements Initializable  {
         checkList.add(newCheck);
 //   Единоразовое добавление кандидата - Нового чека на покупки
         totalCartTable.setItems(checkList);
-        products.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Good>() {
-
+        products.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void changed(ObservableValue<? extends Good> observableValue, Good s, Good t1) {
+            public void handle(MouseEvent click) {
+
                 int lineNumber =1;
                 int count =1;
 
-                currentFood = products.getSelectionModel().getSelectedItem();
-// Баг с добавлением пустого товара
-                if (currentFood!=null) {
-// При нулевом списке
-                    if (shoppingList.size() == 0) {
-                        shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, BigDecimal.valueOf(count).multiply(currentFood.getPrice())));
-                    } else {
+                if (click.getClickCount()==2) {
+                    currentFood = products.getSelectionModel().getSelectedItem();
 // Поиск такой же позиции  в корзине и определение кол-ва и суммы
-                        shoppingList.stream().filter(checklines ->
-                                checklines.getGood().equals(currentFood)).forEach(
-                                e -> {
-                                    e.setCount(e.getCount() + 1);
-                                    e.setSum(BigDecimal.valueOf(e.getCount()).multiply(e.getGood().getPrice()));
-                                });
+                    shoppingList.stream().filter(checklines ->
+                            checklines.getGood().equals(currentFood)).forEach(
+                            e -> {
+                                e.setCount(e.getCount() + 1);
+                                e.setSum(BigDecimal.valueOf(e.getCount()).multiply(e.getGood().getPrice()));
+                            });
 // При условии отсутствия данного товара в корзине добавляется в корзину
-                        if (shoppingList.stream().noneMatch(checklines ->
-                                checklines.getGood().equals(currentFood))) {
-                            shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (currentFood.getPrice().multiply(BigDecimal.valueOf(count)))));
-                        }
+                    if (shoppingList.stream().noneMatch(checklines ->
+                            checklines.getGood().equals(currentFood))) {
+                        shoppingList.add(new Checklines(newCheck, currentFood, lineNumber + 1, count, (currentFood.getPrice().multiply(BigDecimal.valueOf(count)))));
                     }
                 }
 //  Определение ячеек

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.jafafx;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -12,7 +12,7 @@ public class JavaFxApplication extends Application {
 
     @Override
     public void init() {
-        applicationContext = new SpringApplicationBuilder(Demo2Application.class).run();
+        applicationContext = new SpringApplicationBuilder(JafafxApplication.class).run();
     }
 
     @Override

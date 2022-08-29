@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.jafafx.model;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

@@ -1,6 +1,6 @@
-package com.example.demo;
+package com.example.jafafx;
 
-import com.example.demo.JavaFxApplication.StageReadyEvent;
+import com.example.jafafx.JavaFxApplication.StageReadyEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
